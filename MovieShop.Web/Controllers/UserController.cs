@@ -5,7 +5,7 @@ namespace MovieShop.Web.Controllers
 {
 	public class UserController : Controller
 	{
-		public IActionResult Create(User user)
+		public IActionResult Create()
 		{
 			return View();
 		}

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieShop.Infrastructure.Data;
 
 namespace MovieShop.Infrastructure.Migrations
 {
     [DbContext(typeof(MovieShopDbContext))]
-    partial class MovieShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201120045608_ReviewTable")]
+    partial class ReviewTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +33,7 @@ namespace MovieShop.Infrastructure.Migrations
 
                     b.HasIndex("MoviesId");
 
-                    b.ToTable("GenreMovie");
+                    b.ToTable("MovieGenre");
                 });
 
             modelBuilder.Entity("MovieShop.Core.Entities.Cast", b =>
@@ -220,21 +222,6 @@ namespace MovieShop.Infrastructure.Migrations
                     b.ToTable("MovieCrew");
                 });
 
-            modelBuilder.Entity("MovieShop.Core.Entities.MovieGenre", b =>
-                {
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GenreId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MovieId", "GenreId");
-
-                    b.HasIndex("GenreId");
-
-                    b.ToTable("MovieGenre");
-                });
-
             modelBuilder.Entity("MovieShop.Core.Entities.Review", b =>
                 {
                     b.Property<int>("MovieId")
@@ -385,25 +372,6 @@ namespace MovieShop.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Crew");
-
-                    b.Navigation("Movie");
-                });
-
-            modelBuilder.Entity("MovieShop.Core.Entities.MovieGenre", b =>
-                {
-                    b.HasOne("MovieShop.Core.Entities.Genre", "Genre")
-                        .WithMany()
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MovieShop.Core.Entities.Movie", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Genre");
 
                     b.Navigation("Movie");
                 });
