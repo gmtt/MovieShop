@@ -8,6 +8,7 @@ namespace MovieShop.Infrastructure.Data
 	{
 		public MovieShopDbContext(DbContextOptions<MovieShopDbContext> options) : base(options) { }
 		public DbSet<Genre> Genres { get; set; }
+		public DbSet<MovieGenre> MovieGenres { get; set; }
 		public DbSet<Movie> Movies { get; set; }
 		public DbSet<Trailer> Trailers { get; set; }
 		public DbSet<Cast> Casts { get; set; }
@@ -16,7 +17,7 @@ namespace MovieShop.Infrastructure.Data
 		public DbSet<MovieCrew> MovieCrews { get; set; }
 		public DbSet<User> Users { get; set; }
 		public DbSet<Review> Reviews { get; set; }
-
+		public DbSet<Purchase> Purchases { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -29,6 +30,7 @@ namespace MovieShop.Infrastructure.Data
 			modelBuilder.Entity<MovieCrew>(ConfigureMovieCrew);
 			modelBuilder.Entity<User>(ConfigureUser);
 			modelBuilder.Entity<Review>(ConfigureReview);
+			modelBuilder.Entity<Purchase>(ConfigurePurchase);
 		}
 
 		private void ConfigureMovie(EntityTypeBuilder<Movie> builder)
@@ -113,6 +115,13 @@ namespace MovieShop.Infrastructure.Data
 		{
 			builder.ToTable("MovieGenre");
 			builder.HasKey(x => new {x.MovieId, x.GenreId});
+		}
+
+		private void ConfigurePurchase(EntityTypeBuilder<Purchase> builder)
+		{
+			builder.ToTable("Purchase");
+			builder.HasKey(x => x.Id);
+			builder.Property(x => x.TotalPrice).HasPrecision(18, 2);
 		}
 	}
 }
