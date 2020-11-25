@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using MovieShop.Core.Entities;
 using MovieShop.Core.Models;
+using MovieShop.Core.Models.Response;
 using MovieShop.Core.RepositoryInterfaces;
 using MovieShop.Core.ServiceInterfaces;
 
@@ -11,18 +14,22 @@ namespace MovieShop.Infrastructure.Services
 	{
 		private readonly IMovieRepository _movieRepository;
 		private readonly IPurchaseRepository _purchaseRepository;
+
+
 		public MovieService(IMovieRepository movieRepository, IPurchaseRepository purchaseRepository)
 		{
 			this._movieRepository = movieRepository;
 			this._purchaseRepository = purchaseRepository;
 		}
 
-		public async Task<PagedResultSet<MovieResponseModel>> GetMoviesByPagination(int pageSize = 20, int page = 0, string title = "")
+		public async Task<PagedResultSet<MovieResponseModel>> GetMoviesByPagination(int pageSize = 20, int page = 0,
+			string title = "")
 		{
 			throw new System.NotImplementedException();
 		}
 
-		public async Task<PagedResultSet<MovieResponseModel>> GetAllMoviePurchasesByPagination(int pageSize = 20, int page = 0)
+		public async Task<PagedResultSet<MovieResponseModel>> GetAllMoviePurchasesByPagination(int pageSize = 20,
+			int page = 0)
 		{
 			throw new System.NotImplementedException();
 		}
@@ -35,8 +42,10 @@ namespace MovieShop.Infrastructure.Services
 
 		public async Task<MovieDetailsResponseModel> GetMovieAsync(int id)
 		{
-			var movies = await _movieRepository.GetByIdAsync(id);
-			throw new System.NotImplementedException();
+			var movie = await _movieRepository.GetByIdAsync(id);
+			var config = new MapperConfiguration(cfg => cfg.CreateMap<Movie, MovieDetailsResponseModel>());
+			var mapper = config.CreateMapper();
+			return mapper.Map<MovieDetailsResponseModel>(movie);
 		}
 
 		public async Task<IEnumerable<ReviewMovieResponseModel>> GetReviewsForMovie(int id)
@@ -47,39 +56,49 @@ namespace MovieShop.Infrastructure.Services
 		public async Task<int> GetMoviesCount(string title = "")
 		{
 			var cnt = await _movieRepository.GetCountAsync();
-			throw new System.NotImplementedException();
+			return cnt;
 		}
 
 		public async Task<IEnumerable<MovieResponseModel>> GetTopRatedMovies()
 		{
 			var movies = await _movieRepository.GetTopRatedMovies();
-			throw new System.NotImplementedException();
+			var response = movies.Select(movie => new MovieResponseModel()
+				{Id = movie.Id, PosterUrl = movie.PosterUrl, ReleaseDate = movie.ReleaseDate, Title = movie.Title});
+			return response;
 		}
 
 		public async Task<IEnumerable<MovieResponseModel>> GetHighestGrossingMovies()
 		{
 			var movies = await _movieRepository.GetHighestRevenueMovies();
-			throw new System.NotImplementedException();
+			var response = movies.Select(movie => new MovieResponseModel()
+				{Id = movie.Id, PosterUrl = movie.PosterUrl, ReleaseDate = movie.ReleaseDate, Title = movie.Title});
+			return response;
 		}
 
 		public async Task<IEnumerable<MovieResponseModel>> GetMoviesByGenre(int genreId)
 		{
 			var movies = await _movieRepository.GetMoviesByGenre(genreId);
-			throw new System.NotImplementedException();
+			var response = movies.Select(movie => new MovieResponseModel()
+				{Id = movie.Id, PosterUrl = movie.PosterUrl, ReleaseDate = movie.ReleaseDate, Title = movie.Title});
+			return response;
 		}
 
 		public async Task<MovieDetailsResponseModel> CreateMovie(MovieCreateRequest movieCreateRequest)
 		{
 			Movie movie = new Movie();
 			var entity = await _movieRepository.AddAsync(movie);
-			throw new System.NotImplementedException();
+			var config = new MapperConfiguration(cfg => cfg.CreateMap<Movie, MovieDetailsResponseModel>());
+			var mapper = config.CreateMapper();
+			return mapper.Map<MovieDetailsResponseModel>(entity);
 		}
 
 		public async Task<MovieDetailsResponseModel> UpdateMovie(MovieCreateRequest movieCreateRequest)
 		{
 			Movie movie = new Movie();
 			var entity = await _movieRepository.UpdateAsync(movie);
-			throw new System.NotImplementedException();
+			var config = new MapperConfiguration(cfg => cfg.CreateMap<Movie, MovieDetailsResponseModel>());
+			var mapper = config.CreateMapper();
+			return mapper.Map<MovieDetailsResponseModel>(entity);
 		}
 	}
 }

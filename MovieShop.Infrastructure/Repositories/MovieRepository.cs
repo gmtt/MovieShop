@@ -13,6 +13,16 @@ namespace MovieShop.Infrastructure.Repositories
 	{
 		public MovieRepository(MovieShopDbContext dbContext) : base(dbContext) { }
 
+		public override async Task<Movie> GetByIdAsync(int id)
+		{
+			var movie = await _dbContext.Movies.FirstOrDefaultAsync(m => m.Id == id);
+			if (movie == null) return null;
+			var movieRating = await _dbContext.Reviews.Where(r => r.MovieId == id).DefaultIfEmpty()
+				.AverageAsync(r => r == null ? 0 : r.Rating);
+			if (movieRating > 0) movie.Rating = movieRating;
+			return movie;
+		}
+
 		public async Task<IEnumerable<Movie>> GetTopRatedMovies()
 		{
 			return await _dbContext.Reviews
