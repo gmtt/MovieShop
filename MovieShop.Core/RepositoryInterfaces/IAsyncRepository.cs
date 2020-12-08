@@ -13,6 +13,9 @@ namespace MovieShop.Core.RepositoryInterfaces
 
 		Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> filter);
 
+		Task<IEnumerable<T>> ListAllWithIncludesAsync(Expression<Func<T, bool>> @where,
+			params Expression<Func<T, object>>[] includes);
+
 		Task<int> GetCountAsync(Expression<Func<T, bool>> filter = null);
 
 		Task<bool> GetExistsAsync(Expression<Func<T, bool>> filter = null);

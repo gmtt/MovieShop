@@ -25,13 +25,26 @@ namespace MovieShop.Infrastructure.Repositories
 
 		public async Task<IEnumerable<Movie>> GetTopRatedMovies()
 		{
-			return await _dbContext.Reviews
-				.GroupBy(r => r.MovieId)
+			var movies = await _dbContext.Reviews
+				.GroupBy(r => new
+				{
+					Id = r.MovieId,
+					r.Movie.PosterUrl,
+					r.Movie.Title,
+					r.Movie.ReleaseDate
+				})
 				.OrderByDescending(g => g.Average(r => r.Rating))
-				.SelectMany(r => r)
-				.Select(r => r.Movie)
+				.Select(m => new Movie()
+				{
+					Id = m.Key.Id,
+					PosterUrl = m.Key.PosterUrl,
+					Title = m.Key.Title,
+					ReleaseDate = m.Key.ReleaseDate,
+					Rating = m.Average(x => x.Rating)
+				})
 				.Take(50)
 				.ToListAsync();
+			return movies;
 		}
 
 		public async Task<IEnumerable<Movie>> GetMoviesByGenre(int genreId)
@@ -45,6 +58,12 @@ namespace MovieShop.Infrastructure.Repositories
 		public async Task<IEnumerable<Movie>> GetHighestRevenueMovies()
 		{
 			return await _dbContext.Movies.OrderByDescending(m => m.Revenue).Take(50).ToListAsync();
+		}
+
+		public async Task<IEnumerable<Review>> GetMovieReviews(int id)
+		{
+			var reviews = await _dbContext.Reviews.Where(r => r.MovieId == id).Include(r => r.User).ToListAsync();
+			return reviews;
 		}
 	}
 }

@@ -7,7 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using MovieShop.Core.Entities;
 using MovieShop.Core.RepositoryInterfaces;
 using MovieShop.Core.ServiceInterfaces;
 using MovieShop.Infrastructure.Data;
@@ -31,14 +33,22 @@ namespace MovieShop.Web
 			services.AddControllersWithViews();
 			services.AddDbContext<MovieShopDbContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("MovieShopDbConnection")));
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+			{
+				options.Cookie.Name = "MovieShopAuthCookie";
+				options.ExpireTimeSpan = TimeSpan.FromHours(2);
+				options.LoginPath = "/Account/Login";
+			});
 			services.AddScoped<IMovieRepository, MovieRepository>();
 			services.AddScoped<IPurchaseRepository, PurchaseRepository>();
 			services.AddScoped<ICastRepository, CastRepository>();
-			services.AddScoped<IGenreRepository, GenreRepository>();
 			services.AddScoped<IUserRepository, UserRepository>();
 			services.AddScoped<IMovieService, MovieService>();
 			services.AddScoped<ICastService, CastService>();
 			services.AddScoped<IGenreService, GenreService>();
+			services.AddScoped<IAsyncRepository<Genre>, EFRepository<Genre>>();
+			services.AddScoped<IUserService, UserService>();
+			services.AddScoped<ICryptoService, CryptoService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,9 +63,8 @@ namespace MovieShop.Web
 			}
 
 			app.UseStaticFiles();
-
 			app.UseRouting();
-
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>

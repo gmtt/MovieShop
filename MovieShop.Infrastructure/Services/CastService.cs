@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using MovieShop.Core.Models;
 using MovieShop.Core.RepositoryInterfaces;
 using MovieShop.Core.ServiceInterfaces;
@@ -15,8 +16,17 @@ namespace MovieShop.Infrastructure.Services
 		}
 		public async Task<CastDetailsResponseModel> GetCastDetailsWithMovies(int id)
 		{
-			var casts = await _castRepository.GetCastsWithMovie(id);
-			throw new System.NotImplementedException();
+			var cast = await _castRepository.GetByIdAsync(id);
+			if (cast == null) return null;
+			var resp = new CastDetailsResponseModel()
+			{
+				Id = cast.Id,
+				Gender = cast.Gender,
+				Name = cast.Name,
+				ProfilePath = cast.ProfilePath,
+				TmdbUrl = cast.TmdbUrl
+			};
+			return resp;
 		}
 	}
 }

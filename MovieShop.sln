@@ -5,14 +5,18 @@ VisualStudioVersion = 16.0.30709.132
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieShop.Web", "MovieShop.Web\MovieShop.Web.csproj", "{E0AD9CD7-F79B-4FFF-AE37-ACD77815ED4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieShop.Core", "MovieShop.Core\MovieShop.Core.csproj", "{8FEED801-FEA4-472E-885A-EE69901FEB54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieShop.Core", "MovieShop.Core\MovieShop.Core.csproj", "{8FEED801-FEA4-472E-885A-EE69901FEB54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieShop.Infrastructure", "MovieShop.Infrastructure\MovieShop.Infrastructure.csproj", "{28A1248F-F5A6-4C4B-A314-5A845B4626F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieShop.Infrastructure", "MovieShop.Infrastructure\MovieShop.Infrastructure.csproj", "{28A1248F-F5A6-4C4B-A314-5A845B4626F0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{01709A98-7F56-4D50-A7B1-CD581FB4A43D}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieShop.UnitTests", "MovieShop.UnitTests\MovieShop.UnitTests.csproj", "{635B7A5E-EAA4-4BA5-9504-52BB9509B050}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieShop.API", "MovieShop.API\MovieShop.API.csproj", "{4DB68AFF-0AF7-4A39-9B9D-2E745B0C5E8A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +36,14 @@ Global
 		{28A1248F-F5A6-4C4B-A314-5A845B4626F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28A1248F-F5A6-4C4B-A314-5A845B4626F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28A1248F-F5A6-4C4B-A314-5A845B4626F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{635B7A5E-EAA4-4BA5-9504-52BB9509B050}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{635B7A5E-EAA4-4BA5-9504-52BB9509B050}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{635B7A5E-EAA4-4BA5-9504-52BB9509B050}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{635B7A5E-EAA4-4BA5-9504-52BB9509B050}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB68AFF-0AF7-4A39-9B9D-2E745B0C5E8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB68AFF-0AF7-4A39-9B9D-2E745B0C5E8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB68AFF-0AF7-4A39-9B9D-2E745B0C5E8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB68AFF-0AF7-4A39-9B9D-2E745B0C5E8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

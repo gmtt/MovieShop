@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MovieShop.Core.Entities;
+using MovieShop.Core.Helpers;
 using MovieShop.Core.Models;
 using MovieShop.Core.Models.Response;
 using MovieShop.Core.RepositoryInterfaces;
@@ -15,6 +16,11 @@ namespace MovieShop.Infrastructure.Services
 		private readonly IMovieRepository _movieRepository;
 		private readonly IPurchaseRepository _purchaseRepository;
 
+
+		public MovieService(IMovieRepository movieRepository)
+		{
+			_movieRepository = movieRepository;
+		}
 
 		public MovieService(IMovieRepository movieRepository, IPurchaseRepository purchaseRepository)
 		{
@@ -31,7 +37,20 @@ namespace MovieShop.Infrastructure.Services
 		public async Task<PagedResultSet<MovieResponseModel>> GetAllMoviePurchasesByPagination(int pageSize = 20,
 			int page = 0)
 		{
-			throw new System.NotImplementedException();
+			var totalPurchases = await _purchaseRepository.GetCountAsync();
+			var purchases = await _purchaseRepository.GetAllPurchases(pageSize, page);
+			var data = purchases.Select(p =>
+			{
+				var m = p.Movie;
+				return new MovieResponseModel()
+				{
+					Id = m.Id,
+					PosterUrl = m.PosterUrl,
+					ReleaseDate = m.ReleaseDate,
+					Title = m.Title
+				};
+			}).ToList();
+			return new PagedResultSet<MovieResponseModel>(data, page, pageSize, totalPurchases);
 		}
 
 		public async Task<PaginatedList<MovieResponseModel>> GetAllPurchasesByMovieId(int movieId)
@@ -50,7 +69,16 @@ namespace MovieShop.Infrastructure.Services
 
 		public async Task<IEnumerable<ReviewMovieResponseModel>> GetReviewsForMovie(int id)
 		{
-			throw new System.NotImplementedException();
+			var reviews = await _movieRepository.GetMovieReviews(id);
+			var resp = reviews.Select(r => new ReviewMovieResponseModel()
+			{
+				MovieId = r.MovieId,
+				Name = r.User.FirstName + " " + r.User.LastName,
+				Rating = r.Rating,
+				ReviewText = r.ReviewText,
+				UserId = r.UserId
+			});
+			return resp;
 		}
 
 		public async Task<int> GetMoviesCount(string title = "")
@@ -85,7 +113,9 @@ namespace MovieShop.Infrastructure.Services
 
 		public async Task<MovieDetailsResponseModel> CreateMovie(MovieCreateRequest movieCreateRequest)
 		{
-			Movie movie = new Movie();
+			var configMovie = new MapperConfiguration(cfg => cfg.CreateMap<MovieCreateRequest, Movie>());
+			var mapperMovie = configMovie.CreateMapper();
+			var movie = mapperMovie.Map<Movie>(movieCreateRequest);
 			var entity = await _movieRepository.AddAsync(movie);
 			var config = new MapperConfiguration(cfg => cfg.CreateMap<Movie, MovieDetailsResponseModel>());
 			var mapper = config.CreateMapper();
@@ -94,7 +124,9 @@ namespace MovieShop.Infrastructure.Services
 
 		public async Task<MovieDetailsResponseModel> UpdateMovie(MovieCreateRequest movieCreateRequest)
 		{
-			Movie movie = new Movie();
+			var configMovie = new MapperConfiguration(cfg => cfg.CreateMap<MovieCreateRequest, Movie>());
+			var mapperMovie = configMovie.CreateMapper();
+			var movie = mapperMovie.Map<Movie>(movieCreateRequest);
 			var entity = await _movieRepository.UpdateAsync(movie);
 			var config = new MapperConfiguration(cfg => cfg.CreateMap<Movie, MovieDetailsResponseModel>());
 			var mapper = config.CreateMapper();

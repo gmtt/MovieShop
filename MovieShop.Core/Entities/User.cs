@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace MovieShop.Core.Entities
 {
@@ -17,5 +19,6 @@ namespace MovieShop.Core.Entities
 		public DateTime? LastLoginDateTime { get; set; }
 		public bool? IsLocked { get; set; }
 		public int? AccessFailedCount { get; set; }
+		public ICollection<Role> Roles { get; set; }
 	}
 }

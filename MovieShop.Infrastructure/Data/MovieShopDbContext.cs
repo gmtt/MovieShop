@@ -16,8 +16,12 @@ namespace MovieShop.Infrastructure.Data
 		public DbSet<Crew> Crews { get; set; }
 		public DbSet<MovieCrew> MovieCrews { get; set; }
 		public DbSet<User> Users { get; set; }
+		public DbSet<Role> Roles { get; set; }
+		public DbSet<UserRole> UserRoles { get; set; }
 		public DbSet<Review> Reviews { get; set; }
 		public DbSet<Purchase> Purchases { get; set; }
+		public DbSet<Favorite> Favorites { get; set; }
+
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -31,6 +35,14 @@ namespace MovieShop.Infrastructure.Data
 			modelBuilder.Entity<User>(ConfigureUser);
 			modelBuilder.Entity<Review>(ConfigureReview);
 			modelBuilder.Entity<Purchase>(ConfigurePurchase);
+			modelBuilder.Entity<Role>(ConfigureRole);
+			modelBuilder.Entity<UserRole>(ConfigureUserRole);
+		}
+
+		private void ConfigureFavorite(EntityTypeBuilder<Favorite> builder)
+		{
+			builder.ToTable("Favorite");
+			builder.HasKey(x => x.Id);
 		}
 
 		private void ConfigureMovie(EntityTypeBuilder<Movie> builder)
@@ -122,6 +134,19 @@ namespace MovieShop.Infrastructure.Data
 			builder.ToTable("Purchase");
 			builder.HasKey(x => x.Id);
 			builder.Property(x => x.TotalPrice).HasPrecision(18, 2);
+		}
+
+		private void ConfigureRole(EntityTypeBuilder<Role> builder)
+		{
+			builder.ToTable("Role");
+			builder.HasKey(x => x.Id);
+			builder.Property(x => x.Name).HasMaxLength(20);
+		}
+
+		private void ConfigureUserRole(EntityTypeBuilder<UserRole> builder)
+		{
+			builder.ToTable("UserRole");
+			builder.HasKey(x => new {x.UserId, x.RoleId});
 		}
 	}
 }
